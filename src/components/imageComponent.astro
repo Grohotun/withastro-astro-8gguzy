@@ -1,0 +1,29 @@
+---
+import type { ImageMetadata } from "astro";
+import { Image } from "astro:assets";
+
+interface Props {
+  imagePath: string;
+  altText: string;
+  cl: string;
+  w?: string;
+  h?: string;
+}
+
+const { imagePath, altText, cl, w, h } = Astro.props;
+const images = import.meta.glob<{ default: ImageMetadata }>(
+  "/src/assets/*.{jpeg,jpg,png,svg}"
+);
+if (!images[imagePath])
+  throw new Error(
+    `"${imagePath}" does not exist in glob: "src/assets/*.{jpeg,jpg,png,svg}"`
+  );
+
+// for (const path in images) {
+//   images[path]().then((mod) => {
+//     console.log(path, mod);
+//   });
+// }
+---
+
+<Image src={images[imagePath]()} alt={altText} class={cl} width={w} height={h} />
